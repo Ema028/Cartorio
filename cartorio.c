@@ -1,4 +1,4 @@
-#include <stdlib.h> //biblioteca de alocação de espaço na memória
+﻿#include <stdlib.h> //biblioteca de alocação de espaço na memória
 #include <stdio.h> //biblioteca  de comunicação com o usuário
 #include <locale.h> //biblioteca de alocação de textos por região
 #include <string.h> //biblioteca responsável por cuidar das strings
@@ -20,8 +20,8 @@ int main(void)
 	
 		printf("   Cartório da EBAC\n\n"); 
 		printf("Selecione um item do menu:\n\n"); //início do menu
-		printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\n\n"); 
-		printf("Qual função você deseja acessar? 1, 2 ou 3? "); //fim do menu
+		printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\t4-Sair do sistema\n\n\n"); 
+		printf("Qual função você deseja acessar? "); //fim do menu
 	
 		scanf("%d", &opcao); 
 	
@@ -39,6 +39,11 @@ int main(void)
 		
 			case 3:
 			deletar(); //chamada de função
+			break;
+
+			case 4:
+			printf(“Obrigada por utilizar o sistema!\n”);
+			return 0;
 			break;
 		
 			default:
