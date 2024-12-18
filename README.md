@@ -1,2 +1,2 @@
 # Cartorio
-Projeto do curso de TI da Ebac
+Projeto Ebac
