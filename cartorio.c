@@ -27,7 +27,7 @@ int main(void)
 
       setlocale(LC_ALL,"portuguese"); 
 
-      printf("   Cartório da EBAC\n\n"); 
+      printf("   Cartório\n\n"); 
       printf("Selecione um item do menu:\n\n"); //início do menu
       printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\t4-Sair do sistema\n\n\n"); 
       printf("Qual função você deseja acessar? "); //fim do menu
