@@ -1,7 +1,7 @@
-﻿#include <stdlib.h> //biblioteca de alocação de espaço na memória
-#include <stdio.h> //biblioteca  de comunicação com o usuário
-#include <locale.h> //biblioteca de alocação de textos por região
-#include <string.h> //biblioteca responsável por cuidar das strings
+﻿#include <stdlib.h> 
+#include <stdio.h> 
+#include <locale.h> 
+#include <string.h> 
 
 int registro();
 int consulta();
@@ -34,20 +34,20 @@ int main(void)
 
       scanf("%d", &opcao); 
 
-      system("cls"); //limpar a tela
+      system("cls"); 
 
-      switch(opcao) // seleção de opção
+      switch(opcao) 
       {
         case 1:
-        registro(); //chamada de função
+        registro(); 
         break;
 
         case 2:
-        consulta(); //chamada de função
+        consulta(); 
         break;
 
         case 3:
-        deletar(); //chamada de função
+        deletar(); 
         break;
 
         case 4:
@@ -84,49 +84,48 @@ int registro(void) //função para registrar usuários no sistema
   char sobrenome[40];
   char cargo[40];
 
-  printf("Digite o cpf a ser cadastrado: "); //coletando informação do usuário
+  printf("Digite o cpf a ser cadastrado: "); 
   scanf("%s", cpf);
 
-  strcpy (arquivo, cpf); //copia os valores da string
+  strcpy (arquivo, cpf); 
 
-  FILE *file = fopen(arquivo, "w"); //cria o arquivo
+  FILE *file = fopen(arquivo, "w"); 
   fprintf(file, "CPF: ");
-  fprintf(file, cpf);  //armazenando a variável no arquivo
-  fclose(file);  //fecha o arquivo
+  fprintf(file, cpf);  
+  fclose(file);  
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, "\nNome: "); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
+  file = fopen(arquivo, "a"); 
+  fprintf(file, "\nNome: "); 
+  fclose(file); 
 
-  printf("Digite o nome a ser registrado: "); //coletando informação do usuário
+  printf("Digite o nome a ser registrado: "); 
   scanf("%s", nome);
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, nome); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
+  file = fopen(arquivo, "a"); 
+  fprintf(file, nome); 
+  fclose(file); 
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, "\nSobrenome: "); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
+  file = fopen(arquivo, "a"); 
+  fprintf(file, "\nSobrenome: "); 
+  fclose(file); 
 
-  printf("Digite o sobrenome a ser cadastrado: "); //coletando informação do usuário
+  printf("Digite o sobrenome a ser cadastrado: "); 
   scanf("%s", sobrenome);
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, sobrenome); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
+  file = fopen(arquivo, "a"); 
+  fprintf(file, sobrenome); 
+  fclose(file); 
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, "\nCargo: "); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
+  file = fopen(arquivo, "a"); 
+  fprintf(file, "\nCargo: "); 
+  fclose(file); 
 
-  printf("Digite o cargo do usuário a ser cadastrado: "); //coletando informação do usuário
+  printf("Digite o cargo do usuário a ser cadastrado: ");
   scanf("%s", cargo);
 
-  file = fopen(arquivo, "a"); //abre o arquivo
-  fprintf(file, cargo); //adicionando informação no arquivo
-  fclose(file); //fecha o arquivo
-
+  file = fopen(arquivo, "a"); 
+  fprintf(file, cargo); 
+  fclose(file); 
   system("pause");
 }
 
@@ -136,14 +135,13 @@ int consulta(void) //função para consultar usuários no sistema
 
   printf("Você escolheu a consulta de nomes!\n");
 
-  //declarando variáveis e alocando espaço de memória
   char cpf[40];
   char conteudo[200];
 
-  printf("Digite o cpf a ser consultado: "); //coletando informação do usuário
+  printf("Digite o cpf a ser consultado: "); 
   scanf("%s", cpf);
 
-  FILE *file = fopen(cpf, "r"); //abrir e ler o arquivo
+  FILE *file = fopen(cpf, "r"); 
 
   if(file == NULL)
   {
@@ -155,7 +153,7 @@ int consulta(void) //função para consultar usuários no sistema
     printf("Essas são as informações do usuário: %s\n", conteudo);
   }
 
-  fclose(file); //fecha o arquivo
+  fclose(file); 
   system("pause");
 }
 
@@ -165,17 +163,16 @@ int deletar(void) //função para deletar usuários do sistema
 
   printf("Você escolheu deletar nomes!\n");
 
-  //declarando variáveis e alocando memória
   char cpf[40];
   char resposta[4];
 
-  printf("Digite o cpf a ser deletado: "); //coletando informação do usuário
+  printf("Digite o cpf a ser deletado: "); 
   scanf("%s", cpf);
 
-  printf("Você tem certeza que deseja deletar o usuário %s? ", cpf); //pedindo confirmação ao usuário
-  scanf("%s", resposta); //guardando resposta
+  printf("Você tem certeza que deseja deletar o usuário %s? ", cpf); 
+  scanf("%s", resposta); 
   int i = 0;
-  for (i = 0; i < 4; i++) //transformando as letras da resposta em maiúsculas
+  for (i = 0; i < 4; i++) 
   {
         resposta[i] = toupper(resposta[i]); 
   }
