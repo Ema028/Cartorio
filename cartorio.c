@@ -61,8 +61,6 @@ int main(void)
         break;
       }
     }
-
-    printf("Esse software é de Emanuelle");
   }
   else
   {
