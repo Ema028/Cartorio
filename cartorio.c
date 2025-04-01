@@ -3,9 +3,9 @@
 #include <locale.h> 
 #include <string.h> 
 
-int registro();
-int consulta();
-int deletar();
+int registro(void);
+int consulta(void);
+int deletar(void);
 
 int main(void)
 {
