@@ -6,20 +6,22 @@
 
 void registrar(void);
 void consultar(void);
-int deletar(void);
+void deletar(void);
 int login(char* string);
 
 int main()
 {
     printf("Digite a senha do administrador para acessar o painel");
     char* senha = get_string();
+    
     if(login(senha) == 1)
     {
         return 1;
     }
-    for(i = 1; i = 1;)
+    
+    while(1)
     {
-      system("cls");
+      system("clear");
 
       setlocale(LC_ALL,"portuguese"); 
 
@@ -28,7 +30,7 @@ int main()
       printf("Qual função você deseja acessar? ");
       int opcao = get_int();
 
-      system("cls"); 
+      system("clear"); 
 
       switch(opcao) 
       {
@@ -59,7 +61,15 @@ void registrar(void)
   printf("Digite o cpf a ser cadastrado: "); 
   char* cpf = get_string();
 
-  FILE *file = fopen(arquivo, "w"); 
+  char arquivo[64];
+  sprintf(arquivo, "%s.txt", cpf); // formatar cpf e armazenar em arquivo
+
+  FILE *file = fopen(arquivo, "w");
+  if(file == NULL)
+  {
+      printf("Erro!\n");
+      return;
+  }
   fprintf(file, "CPF: ");
   fprintf(file, cpf);  
   fclose(file);  
@@ -80,7 +90,7 @@ void registrar(void)
   fclose(file); 
 
   printf("Digite o sobrenome a ser cadastrado: "); 
-  char* sobrenome = get_string()
+  char* sobrenome = get_string();
 
   file = fopen(arquivo, "a"); 
   fprintf(file, sobrenome); 
@@ -115,7 +125,7 @@ void consultar(void)
     printf("Não foi possível localizar o arquivo.\n");
   }
 
-  while(fgets(buffer, 512, file) != NULL)
+  while(fgets(buffer, sizeof(buffer), file) != NULL)
   {
     printf("Essas são as informações do usuário: %s\n", buffer);
   }
@@ -124,16 +134,17 @@ void consultar(void)
   system("pause");
 }
 
-int deletar(void)
+void deletar(void)
 {
   setlocale(LC_ALL,"portuguese");
   printf("Digite o cpf a ser deletado: "); 
   char* cpf = get_string();
 
-  printf("Você tem certeza que deseja deletar o usuário %s? ", cpf); 
-  char* resposta = get_string();
+  printf("Você tem certeza que deseja deletar o usuário %s? (S/N)", cpf); 
+  char resposta[10];
+  strcpy(resposta, get_string());
   int i = 0;
-  for (i = 0; i < 4; i++) 
+  for (i = 0; resposta[i] != '\0'; i++) 
   {
         resposta[i] = toupper(resposta[i]); 
   }
@@ -153,23 +164,16 @@ int deletar(void)
       printf("o usuário não encontrado no sistema!.\n");
       system("pause");
     }
-    return 0;
+    return;
   }
   else //recomeçar função
   {
-    system("cls");
+    system("clear");
     deletar();
   }
 }
 
 int login(char* string)
 {
-    if(strcmp (string, "admin") == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
+    return (strcmp (string, "admin") == 0) ? 0 : 1; // 0 se admin, 1 para outra coisa
 }
