@@ -60,6 +60,12 @@ void registrar(void)
 
   printf("Digite o cpf a ser cadastrado: "); 
   char* cpf = get_string();
+  printf("Digite o nome a ser registrado: "); 
+  char* nome = get_string();
+  printf("Digite o sobrenome a ser cadastrado: "); 
+  char* sobrenome = get_string();
+  printf("Digite o cargo do usuário a ser cadastrado: ");
+  char* cargo = get_string();
 
   char arquivo[64];
   sprintf(arquivo, "%s.txt", cpf); // formatar cpf e armazenar em arquivo
@@ -70,41 +76,10 @@ void registrar(void)
       printf("Erro!\n");
       return;
   }
-  fprintf(file, "CPF: ");
-  fprintf(file, cpf);  
-  fclose(file);  
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "\nNome: "); 
-  fclose(file); 
-
-  printf("Digite o nome a ser registrado: "); 
-  char* nome = get_string();
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "%s", nome); 
-  fclose(file); 
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "\nSobrenome: "); 
-  fclose(file); 
-
-  printf("Digite o sobrenome a ser cadastrado: "); 
-  char* sobrenome = get_string();
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "%s", sobrenome); 
-  fclose(file); 
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "\nCargo: "); 
-  fclose(file); 
-
-  printf("Digite o cargo do usuário a ser cadastrado: ");
-  char* cargo = get_string();
-
-  file = fopen(arquivo, "a"); 
-  fprintf(file, "%s", cargo); 
+  fprintf(file, "CPF: %s\n" cpf);  
+  fprintf(file, "NOME: %s\n", nome); 
+  fprintf(file, "SOBRENOME: %s\n", sobrenome); 
+  fprintf(file, "CARGO: %s\n", cargo); 
   fclose(file); 
   system("pause");
 }
@@ -125,6 +100,7 @@ void consultar(void)
   if(file == NULL)
   {
     printf("Não foi possível localizar o arquivo.\n");
+    return;
   }
 
   while(fgets(buffer, sizeof(buffer), file) != NULL)
@@ -144,9 +120,10 @@ void deletar(void)
   char arquivo[64];
   sprintf(arquivo, "%s.txt", cpf);
 
+  char resposta[4];
   printf("Você tem certeza que deseja deletar o usuário %s? (S/N)", cpf); 
-  char resposta[10];
-  strcpy(resposta, get_string());
+  scanf("%s", resposta);
+  
   int i = 0;
   for (i = 0; resposta[i] != '\0'; i++) 
   {
@@ -169,7 +146,10 @@ void deletar(void)
       system("pause");
     }
   }
-  return;
+  else
+  {
+     printf("Operação cancelada!\n");
+  }
 }
 
 int login(char* string)
