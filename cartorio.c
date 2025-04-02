@@ -82,7 +82,7 @@ void registrar(void)
   char* nome = get_string();
 
   file = fopen(arquivo, "a"); 
-  fprintf(file, nome); 
+  fprintf(file, "%s", nome); 
   fclose(file); 
 
   file = fopen(arquivo, "a"); 
@@ -93,7 +93,7 @@ void registrar(void)
   char* sobrenome = get_string();
 
   file = fopen(arquivo, "a"); 
-  fprintf(file, sobrenome); 
+  fprintf(file, "%s", sobrenome); 
   fclose(file); 
 
   file = fopen(arquivo, "a"); 
@@ -104,7 +104,7 @@ void registrar(void)
   char* cargo = get_string();
 
   file = fopen(arquivo, "a"); 
-  fprintf(file, cargo); 
+  fprintf(file, "%s", cargo); 
   fclose(file); 
   system("pause");
 }
@@ -117,9 +117,11 @@ void consultar(void)
 
   printf("Digite o cpf a ser consultado: "); 
   char* cpf = get_string();
-
-  FILE *file = fopen(cpf, "r"); 
-
+    
+  char arquivo[64];
+  sprintf(arquivo, "%s.txt", cpf);
+    
+  FILE *file = fopen(arquivo, "r"); 
   if(file == NULL)
   {
     printf("Não foi possível localizar o arquivo.\n");
@@ -139,6 +141,8 @@ void deletar(void)
   setlocale(LC_ALL,"portuguese");
   printf("Digite o cpf a ser deletado: "); 
   char* cpf = get_string();
+  char arquivo[64];
+  sprintf(arquivo, "%s.txt", cpf);
 
   printf("Você tem certeza que deseja deletar o usuário %s? (S/N)", cpf); 
   char resposta[10];
@@ -154,7 +158,7 @@ void deletar(void)
 
   if(strcmp(resposta,confirmacao) == 0 || strcmp(resposta,confirmacao_curta) == 0) 
   {
-    if(remove(cpf) == 0) //deletar arquivo
+    if(remove(arquivo) == 0) //deletar arquivo
     {
       printf("usuário deletado com sucesso!.\n");
       system("pause");
@@ -164,13 +168,8 @@ void deletar(void)
       printf("o usuário não encontrado no sistema!.\n");
       system("pause");
     }
-    return;
   }
-  else //recomeçar função
-  {
-    system("clear");
-    deletar();
-  }
+  return;
 }
 
 int login(char* string)
