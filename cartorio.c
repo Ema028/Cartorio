@@ -21,7 +21,7 @@ int main()
     
     while(1)
     {
-      system("clear");
+      system("cls");
 
       setlocale(LC_ALL,"portuguese"); 
 
@@ -30,7 +30,7 @@ int main()
       printf("Qual função você deseja acessar? ");
       int opcao = get_int();
 
-      system("clear"); 
+      system("cls"); 
 
       switch(opcao) 
       {
@@ -76,7 +76,7 @@ void registrar(void)
       printf("Erro!\n");
       return;
   }
-  fprintf(file, "CPF: %s\n" cpf);  
+  fprintf(file, "CPF: %s\n",  cpf);  
   fprintf(file, "NOME: %s\n", nome); 
   fprintf(file, "SOBRENOME: %s\n", sobrenome); 
   fprintf(file, "CARGO: %s\n", cargo); 
