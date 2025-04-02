@@ -1,91 +1,63 @@
-﻿#include <stdlib.h> 
-#include <stdio.h> 
+#include <stdio.h>
+#include <stdlib.h> 
 #include <locale.h> 
-#include <string.h> 
+#include <string.h>
+#include "input.h" // biblioteca local
 
-int registro(void);
-int consulta(void);
+void registrar(void);
+void consultar(void);
 int deletar(void);
+int login(char* string);
 
-int main(void)
+int main()
 {
-  int opcao = 0;
-  int i = 1;
-  char* senha = malloc(6);
-
-  printf("Login de administrador!\n\nDigite a sua senha: ");
-  scanf("%s", senha);
-
-  if(strcmp (senha, "admin") == 0)
-  {
-    free(senha);
-    system("cls");
-
+    printf("Digite a senha do administrador para acessar o painel");
+    char* senha = get_string();
+    if(login(senha) == 1)
+    {
+        return 1;
+    }
     for(i = 1; i = 1;)
     {
       system("cls");
 
       setlocale(LC_ALL,"portuguese"); 
 
-      printf("   Cartório\n\n"); 
-      printf("Selecione um item do menu:\n\n"); //início do menu
+      printf("Selecione um item do menu:\n\n");
       printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\t4-Sair do sistema\n\n\n"); 
-      printf("Qual função você deseja acessar? "); //fim do menu
-
-      scanf("%d", &opcao); 
+      printf("Qual função você deseja acessar? ");
+      int opcao = get_int();
 
       system("cls"); 
 
       switch(opcao) 
       {
         case 1:
-        registro(); 
+        registrar(); 
         break;
 
         case 2:
-        consulta(); 
+        consultar(); 
         break;
 
         case 3:
         deletar(); 
         break;
 
-        case 4:
-        printf("Obrigada por utilizar o sistema!\n");
-        return 0;
-        break;
-
         default:
-        printf("Essa não é uma opção!\n");
-        system("pause");
+        printf("Saindo do sistema!\n");
+        return 0;
         break;
       }
     }
-  }
-  else
-  {
-    printf("Senha incorreta!");
-    return 1;
-  }
 }
 
-int registro(void) //função para registrar usuários no sistema
+void registrar(void)
 {
   setlocale(LC_ALL,"portuguese");
 
-  printf("Você escolheu o registro de nomes!\n");
-
-  //declarando variáveis e alocando espaço na memória
-  char arquivo[40]; 
-  char cpf[40];
-  char nome[40];
-  char sobrenome[40];
-  char cargo[40];
-
   printf("Digite o cpf a ser cadastrado: "); 
-  scanf("%s", cpf);
-
-  strcpy (arquivo, cpf); 
+  char* cpf = get_string();
 
   FILE *file = fopen(arquivo, "w"); 
   fprintf(file, "CPF: ");
@@ -97,7 +69,7 @@ int registro(void) //função para registrar usuários no sistema
   fclose(file); 
 
   printf("Digite o nome a ser registrado: "); 
-  scanf("%s", nome);
+  char* nome = get_string();
 
   file = fopen(arquivo, "a"); 
   fprintf(file, nome); 
@@ -108,7 +80,7 @@ int registro(void) //função para registrar usuários no sistema
   fclose(file); 
 
   printf("Digite o sobrenome a ser cadastrado: "); 
-  scanf("%s", sobrenome);
+  char* sobrenome = get_string()
 
   file = fopen(arquivo, "a"); 
   fprintf(file, sobrenome); 
@@ -119,7 +91,7 @@ int registro(void) //função para registrar usuários no sistema
   fclose(file); 
 
   printf("Digite o cargo do usuário a ser cadastrado: ");
-  scanf("%s", cargo);
+  char* cargo = get_string();
 
   file = fopen(arquivo, "a"); 
   fprintf(file, cargo); 
@@ -127,17 +99,14 @@ int registro(void) //função para registrar usuários no sistema
   system("pause");
 }
 
-int consulta(void) //função para consultar usuários no sistema
+void consultar(void)
 {
   setlocale(LC_ALL,"portuguese");
 
-  printf("Você escolheu a consulta de nomes!\n");
-
-  char cpf[40];
-  char conteudo[200];
+  char buffer[512];
 
   printf("Digite o cpf a ser consultado: "); 
-  scanf("%s", cpf);
+  char* cpf = get_string();
 
   FILE *file = fopen(cpf, "r"); 
 
@@ -146,39 +115,33 @@ int consulta(void) //função para consultar usuários no sistema
     printf("Não foi possível localizar o arquivo.\n");
   }
 
-  while(fgets(conteudo, 200, file) != NULL)
+  while(fgets(buffer, 512, file) != NULL)
   {
-    printf("Essas são as informações do usuário: %s\n", conteudo);
+    printf("Essas são as informações do usuário: %s\n", buffer);
   }
 
   fclose(file); 
   system("pause");
 }
 
-int deletar(void) //função para deletar usuários do sistema
+int deletar(void)
 {
   setlocale(LC_ALL,"portuguese");
-
-  printf("Você escolheu deletar nomes!\n");
-
-  char cpf[40];
-  char resposta[4];
-
   printf("Digite o cpf a ser deletado: "); 
-  scanf("%s", cpf);
+  char* cpf = get_string();
 
   printf("Você tem certeza que deseja deletar o usuário %s? ", cpf); 
-  scanf("%s", resposta); 
+  char* resposta = get_string();
   int i = 0;
   for (i = 0; i < 4; i++) 
   {
         resposta[i] = toupper(resposta[i]); 
   }
 
-  const char confirmacao[4] = "SIM"; // declarando respostas positivas
+  const char confirmacao[4] = "SIM";
   const char confirmacao_curta[4] = "S";
 
-  if(strcmp(resposta,confirmacao) == 0 || strcmp(resposta,confirmacao_curta) == 0) //comparando se a resposta fornecida pelo usuário é positiva
+  if(strcmp(resposta,confirmacao) == 0 || strcmp(resposta,confirmacao_curta) == 0) 
   {
     if(remove(cpf) == 0) //deletar arquivo
     {
@@ -197,4 +160,16 @@ int deletar(void) //função para deletar usuários do sistema
     system("cls");
     deletar();
   }
+}
+
+int login(char* string)
+{
+    if(strcmp (string, "admin") == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
