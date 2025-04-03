@@ -2,123 +2,155 @@
 #include <stdlib.h> 
 #include <locale.h> 
 #include <string.h>
-#include "input.h" // biblioteca local
+#include <ctype.h>
 
 void registrar(void);
 void consultar(void);
 void deletar(void);
 int login(char* string);
+void salvar(void);
+void load(void);
+
+typedef struct user{
+  char cpf[15];
+  char name[50];
+  char surname[50];
+  char job[50];
+  struct user* prev;
+  struct user* next;
+} user;
+
+user* head = NULL;
 
 int main()
 {
-    printf("Digite a senha do administrador para acessar o painel");
-    char* senha = get_string();
+  char senha[15];
+  printf("Digite a senha do administrador para acessar o painel");
+  scanf("%s", senha);
     
-    if(login(senha) == 1)
-    {
-        return 1;
-    }
+  if(login(senha) == 1)
+  {
+    return 1;
+  }
+
+  load();
     
-    while(1)
+  while(1)
+  {
+    system("cls");
+    int opcao = 0;
+
+    setlocale(LC_ALL,"portuguese"); 
+
+    printf("Selecione um item do menu:\n\n");
+    printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\t4-Sair do sistema\n\n\n"); 
+    printf("Qual função você deseja acessar? ");
+    scanf("%i", &opcao);
+
+    system("cls"); 
+
+    switch(opcao) 
     {
-      system("cls");
+      case 1:
+      registrar(); 
+      break;
 
-      setlocale(LC_ALL,"portuguese"); 
+      case 2:
+      consultar(); 
+      break;
 
-      printf("Selecione um item do menu:\n\n");
-      printf("\t1-Registrar nomes\n\t2-Consultar nomes\n\t3-Deletar nomes\n\t4-Sair do sistema\n\n\n"); 
-      printf("Qual função você deseja acessar? ");
-      int opcao = get_int();
+      case 3:
+      deletar(); 
+      break;
 
-      system("cls"); 
-
-      switch(opcao) 
+      default:
+      printf("Saindo do sistema!\n");
+      salvar();
+      user* temp = head;
+      while (temp != NULL) //liberar memoria
       {
-        case 1:
-        registrar(); 
-        break;
-
-        case 2:
-        consultar(); 
-        break;
-
-        case 3:
-        deletar(); 
-        break;
-
-        default:
-        printf("Saindo do sistema!\n");
-        return 0;
-        break;
+        user* temp2 = temp;
+        temp = temp->next;
+        free(temp2);
       }
+      return 0;
+      break;
     }
+  }
 }
 
-void registrar(void)
+void registrar(void) // cria uma double linked list com o struct usuario para acesso rápido enquanto o programa está ativo
 {
   setlocale(LC_ALL,"portuguese");
 
-  printf("Digite o cpf a ser cadastrado: "); 
-  char* cpf = get_string();
-  printf("Digite o nome a ser registrado: "); 
-  char* nome = get_string();
-  printf("Digite o sobrenome a ser cadastrado: "); 
-  char* sobrenome = get_string();
-  printf("Digite o cargo do usuário a ser cadastrado: ");
-  char* cargo = get_string();
-
-  char arquivo[64];
-  sprintf(arquivo, "%s.txt", cpf); // formatar cpf e armazenar em arquivo
-
-  FILE *file = fopen(arquivo, "w");
-  if(file == NULL)
+  user* new_user = malloc(sizeof(user));
+  if(new_user == NULL)
   {
-      printf("Erro!\n");
-      return;
+    return;
   }
-  fprintf(file, "CPF: %s\n",  cpf);  
-  fprintf(file, "NOME: %s\n", nome); 
-  fprintf(file, "SOBRENOME: %s\n", sobrenome); 
-  fprintf(file, "CARGO: %s\n", cargo); 
-  fclose(file); 
+
+  printf("Digite o CPF: ");
+  scanf("%s", new_user->cpf);
+  printf("Digite o Nome: ");
+  scanf("%s", new_user->name);
+  printf("Digite o Sobrenome: ");
+  scanf("%s", new_user->surname);
+  printf("Digite o Cargo: ");
+  scanf("%s", new_user->job);
+
+  new_user->prev = NULL;
+  new_user->next = NULL;
+
+  if(head == NULL)
+  {
+    head = new_user;
+  }
+  else
+  {
+    new_user->next = head;
+    head->prev = new_user;
+    new_user->prev = NULL;
+    head = new_user;
+  }
+
+  printf("usuário registrado com sucesso!\n");
   system("pause");
 }
 
 void consultar(void)
 {
   setlocale(LC_ALL,"portuguese");
+  
+  char cpf[15];
+  printf("Digite o CPF a ser consultado: ");
+  scanf("%s", cpf);
 
-  char buffer[512];
-
-  printf("Digite o cpf a ser consultado: "); 
-  char* cpf = get_string();
-    
-  char arquivo[64];
-  sprintf(arquivo, "%s.txt", cpf);
-    
-  FILE *file = fopen(arquivo, "r"); 
-  if(file == NULL)
+  user* temp = head;
+  while (temp != NULL)
   {
-    printf("Não foi possível localizar o arquivo.\n");
-    return;
+    if (strcmp(temp->cpf, cpf) == 0) 
+    {
+      printf("informações do usuário:\n");
+      printf("CPF: %s\nNome: %s\nSobrenome: %s\nCargo: %s\n", temp->cpf, temp->name, temp->surname, temp->job);
+      system("pause");
+      return;
+    }
+    else
+    {
+      temp = temp->next;
+    }
   }
-
-  while(fgets(buffer, sizeof(buffer), file) != NULL)
-  {
-    printf("Essas são as informações do usuário: %s\n", buffer);
-  }
-
-  fclose(file); 
+  printf("Usuário não encontrado!\n");
   system("pause");
 }
 
 void deletar(void)
 {
   setlocale(LC_ALL,"portuguese");
-  printf("Digite o cpf a ser deletado: "); 
-  char* cpf = get_string();
-  char arquivo[64];
-  sprintf(arquivo, "%s.txt", cpf);
+
+  char cpf[15];
+  printf("Digite o cpf a ser deletado: ");
+  scanf("%s", cpf);
 
   char resposta[4];
   printf("Você tem certeza que deseja deletar o usuário %s? (S/N)", cpf); 
@@ -127,7 +159,7 @@ void deletar(void)
   int i = 0;
   for (i = 0; resposta[i] != '\0'; i++) 
   {
-        resposta[i] = toupper(resposta[i]); 
+    resposta[i] = toupper(resposta[i]); 
   }
 
   const char confirmacao[4] = "SIM";
@@ -135,24 +167,106 @@ void deletar(void)
 
   if(strcmp(resposta,confirmacao) == 0 || strcmp(resposta,confirmacao_curta) == 0) 
   {
-    if(remove(arquivo) == 0) //deletar arquivo
+    user* temp = head;
+    while (temp != NULL)
     {
-      printf("usuário deletado com sucesso!.\n");
-      system("pause");
-    }
-    else
-    {
-      printf("o usuário não encontrado no sistema!.\n");
-      system("pause");
+      if (strcmp(temp->cpf, cpf) == 0) 
+      {
+        if (temp->prev != NULL) 
+        {
+          temp->prev->next = temp->next; // node anterior pula temp
+        } 
+        else
+        {
+          head = temp->next;
+        }
+        if (temp->next != NULL)
+        {
+          temp->next->prev = temp->prev; // próximo node pula temp
+        }
+        free(temp);
+        printf("Usuário deletado com sucesso!\n");
+        system("pause");
+        return;
+      }
+      else
+      {
+        temp = temp->next;
+      }
     }
   }
   else
   {
-     printf("Operação cancelada!\n");
+    printf("Operação cancelada!\n");
+    system("pause");
+    return;
   }
 }
 
 int login(char* string)
 {
-    return (strcmp (string, "admin") == 0) ? 0 : 1; // 0 se admin, 1 para outra coisa
+  if (strcmp (string, "admin") == 0)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}
+
+void salvar(void) // salva as informações dos usuários em um arquivo
+{
+  FILE* file = fopen("usuarios.txt", "w");
+  if (file == NULL) 
+  {
+    printf("Erro ao salvar!\n");
+    return;
+  }
+
+  user* temp = head;
+  while (temp != NULL)
+  {
+    fprintf(file, "%s %s %s %s\n", temp->cpf, temp->name, temp->surname, temp->job);
+    temp = temp->next;
+  }
+
+  fclose(file);
+  printf("Dados salvos com sucesso!\n");
+}
+
+void load(void) // carrega as informações dos usuários do arquivo no programa
+{
+  FILE* file = fopen("usuarios.txt", "r");
+  if (file == NULL)
+  {
+    return;
+  }
+
+  while(!feof(file)) // até o final do arquivo
+  {
+    user* new_user = malloc(sizeof(user));
+    if(new_user == NULL)
+    {
+      fclose(file);
+      return;
+    }
+
+    fscanf(file, "%s %s %s %s", new_user->cpf, new_user->name, new_user->surname, new_user->job);
+
+    new_user->prev = NULL;
+    new_user->next = NULL;
+
+    if(head == NULL)
+    {
+      head = new_user;
+    }
+    else
+    {
+      new_user->next = head;
+      head->prev = new_user;
+      new_user->prev = NULL;
+      head = new_user;
+    }
+  }
 }
