@@ -83,7 +83,6 @@ void registrar(void) // cria uma double linked list com o struct usuario para ac
 {
   setlocale(LC_ALL,"portuguese");
 
-  user* temp = NULL;
   user* new_user = malloc(sizeof(user));
   if(new_user == NULL)
   {
@@ -108,12 +107,10 @@ void registrar(void) // cria uma double linked list com o struct usuario para ac
   }
   else
   {
-    temp = new_user;
-    temp->next = head;
-    head->prev = temp;
-    temp->prev = NULL;
-    head = temp;
-    free(temp);
+    new_user->next = head;
+    head->prev = new_user;
+    new_user->prev = NULL;
+    head = new_user;
   }
 
   printf("usuário registrado com sucesso!\n");
@@ -220,10 +217,56 @@ int login(char* string)
 
 void salvar(void) // salva as informações dos usuários em um arquivo
 {
-  //todo
+  FILE* file = fopen("usuarios.txt", "w");
+  if (file == NULL) 
+  {
+    printf("Erro ao salvar!\n");
+    return;
+  }
+
+  user* temp = head;
+  while (temp != NULL)
+  {
+    fprintf(file, "%s %s %s %s\n", temp->cpf, temp->name, temp->surname, temp->job);
+    temp = temp->next;
+  }
+
+  fclose(file);
+  printf("Dados salvos com sucesso!\n");
 }
 
 void load(void) // carrega as informações dos usuários do arquivo no programa
 {
-  //todo
+  FILE* file = fopen("usuarios.txt", "r");
+  if (file == NULL)
+  {
+    return;
+  }
+
+  while(!feof(file)) // até o final do arquivo
+  {
+    user* new_user = malloc(sizeof(user));
+    if(new_user == NULL)
+    {
+      fclose(file);
+      return;
+    }
+
+    fscanf(file, "%s %s %s %s", new_user->cpf, new_user->name, new_user->surname, new_user->job);
+
+    new_user->prev = NULL;
+    new_user->next = NULL;
+
+    if(head == NULL)
+    {
+      head = new_user;
+    }
+    else
+    {
+      new_user->next = head;
+      head->prev = new_user;
+      new_user->prev = NULL;
+      head = new_user;
+    }
+  }
 }
