@@ -10,6 +10,8 @@ void deletar(void);
 int login(char* string);
 void salvar(void);
 void load(void);
+void editar(void);
+void to_upper(char* str);
 
 typedef struct user{
   char cpf[15];
@@ -91,12 +93,18 @@ void registrar(void) // cria uma double linked list com o struct usuario para ac
 
   printf("Digite o CPF: ");
   scanf("%s", new_user->cpf);
+
   printf("Digite o Nome: ");
   scanf("%s", new_user->name);
+  to_upper(new_user->name);
+
   printf("Digite o Sobrenome: ");
   scanf("%s", new_user->surname);
+  to_upper(new_user->surname);
+
   printf("Digite o Cargo: ");
   scanf("%s", new_user->job);
+  to_upper(new_user->job);
 
   new_user->prev = NULL;
   new_user->next = NULL;
@@ -122,6 +130,7 @@ void consultar(void)
   setlocale(LC_ALL,"portuguese");
   
   char cpf[15];
+
   printf("Digite o CPF a ser consultado: ");
   scanf("%s", cpf);
 
@@ -155,12 +164,7 @@ void deletar(void)
   char resposta[4];
   printf("Você tem certeza que deseja deletar o usuário %s? (S/N)", cpf); 
   scanf("%s", resposta);
-  
-  int i = 0;
-  for (i = 0; resposta[i] != '\0'; i++) 
-  {
-    resposta[i] = toupper(resposta[i]); 
-  }
+  to_upper(resposta);
 
   const char confirmacao[4] = "SIM";
   const char confirmacao_curta[4] = "S";
@@ -269,4 +273,71 @@ void load(void) // carrega as informações dos usuários do arquivo no programa
       head = new_user;
     }
   }
+}
+
+void editar(void)
+{
+  setlocale(LC_ALL,"portuguese");
+
+  char nome[50];
+  printf("Qual o nome do usuário que deseja editar?\n");
+  scanf("%s", nome);
+  to_upper(nome);
+
+  user* temp = head;
+  while (temp != NULL)
+  {
+    if (strcmp(temp->name, nome) == 0) 
+    {
+      int resposta;
+      char buffer[40];
+      printf("Usuário encontrado!\n");
+      printf("Digite 1 para editar o CPF, 2-Nome, 3-Sobrenome ou 4-Cargo?\n");
+      scanf("%i", &resposta);
+      printf("Qual o novo registro?\n");
+      scanf("%s", buffer);
+      to_upper(buffer);
+      
+      switch(resposta) 
+      {
+        case 1:
+          strcpy(temp->cpf, buffer);
+          break;
+
+        case 2:
+          strcpy(temp->cpf, buffer);
+          break;
+
+        case 3:
+          strcpy(temp->surname, buffer); 
+          break;
+
+        case 4:
+          strcpy(temp->job, buffer);
+          break;
+
+        default:
+          printf("Não é uma opção válida!\n");
+          system("pause");
+          return;
+      }
+      printf("Registro atualizado com sucesso!\n");
+      system("pause");
+      return;
+    }
+    else
+    {
+      temp = temp->next;
+    }
+  }
+  printf("Usuário não encontrado!\n");
+  system("pause");
+}
+
+void to_upper(char* str) 
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    str[i] = toupper(str[i]);
+  } 
 }
